@@ -214,14 +214,14 @@ if df is not None and not df.empty:
     for i, col in enumerate(row1_cols):
         if i < len(logo_files):
             try:
-                col.image(logo_files[i], use_column_width='auto')
+                col.image(logo_files[i], use_container_width='auto')
             except Exception as e:
                 col.warning(f"Logo {i+1} gagal dimuat.")
 
     for i, col in enumerate(row2_cols):
         if (i+4) < len(logo_files):
             try:
-                col.image(logo_files[i+4], use_column_width='auto')
+                col.image(logo_files[i+4], use_container_width='auto')
             except Exception as e:
                 col.warning(f"Logo {i+5} gagal dimuat.")
 
