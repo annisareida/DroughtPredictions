@@ -2,13 +2,12 @@ import streamlit as st
 import pandas as pd
 import plotly.express as px
 import os
-from datetime import datetime
+from datetime import datetime, date
 
 # =================================================================================
 # KONFIGURASI HALAMAN DAN DATA
 # =================================================================================
 
-# Konfigurasi dasar halaman Streamlit
 st.set_page_config(
     page_title="Prediksi Kekeringan Ogan Ilir",
     page_icon="💧",
@@ -16,86 +15,90 @@ st.set_page_config(
     initial_sidebar_state="expanded"
 )
 
-# [DIUBAH] Definisi 7 Kelas Kekeringan yang baru sesuai data Anda
-# Kunci dictionary sekarang adalah string dari CSV, bukan angka
+# [DIUBAH] Deskripsi dan saran disesuaikan untuk pertanian & musim tanam
 DROUGHT_CLASSES = {
-    "Sangat Basah":      {"desc": "Kondisi tanah sangat jenuh air, potensi banjir atau genangan tinggi.", "color": "#154360"},
-    "Basah Ekstrem":     {"desc": "Curah hujan sangat tinggi, melebihi kapasitas normal tanah.", "color": "#1A5276"},
-    "Basah Sedang":      {"desc": "Kondisi lebih basah dari biasanya, pasokan air melimpah.", "color": "#4E80B4"},
-    "Normal":            {"desc": "Kondisi hidrologi seimbang, ideal untuk pertanian dan ketersediaan air.", "color": "#2ECC71"},
-    "Kering Sedang":     {"desc": "Kekeringan tingkat sedang, perlu kewaspadaan pada sektor pertanian.", "color": "#F39C12"},
-    "Kering Parah":      {"desc": "Kekeringan parah, sumber air permukaan menurun drastis.", "color": "#E67E22"},
-    "Kering Sangat Parah": {"desc": "Kondisi darurat kekeringan, krisis air meluas dan risiko kebakaran tinggi.", "color": "#C0392B"}
+    "Sangat Basah": {
+        "desc": "Kondisi tanah sangat jenuh air. Risiko tinggi busuk akar dan serangan jamur. Lahan sawah tergenang.",
+        "saran": "Tunda penanaman. Perbaiki drainase lahan. Waspada serangan hama seperti keong mas.",
+        "color": "#154360"
+    },
+    "Basah Ekstrem": {
+        "desc": "Curah hujan sangat tinggi. Pertumbuhan tanaman palawija terhambat. Penyerbukan bunga dapat terganggu.",
+        "saran": "Pastikan drainase optimal. Tunda pemupukan untuk menghindari pencucian hara. Pantau kelembaban.",
+        "color": "#1A5276"
+    },
+    "Basah Sedang": {
+        "desc": "Kondisi sangat baik untuk memulai musim tanam padi sawah. Ketersediaan air melimpah.",
+        "saran": "Waktu ideal untuk pengolahan lahan basah dan tanam padi. Hemat air untuk persiapan masa depan.",
+        "color": "#4E80B4"
+    },
+    "Normal": {
+        "desc": "Kondisi hidrologi seimbang. Ideal untuk pertumbuhan vegetatif tanaman padi dan palawija.",
+        "saran": "Lakukan pemupukan dan penyiangan sesuai jadwal. Pertahankan jadwal irigasi normal.",
+        "color": "#2ECC71"
+    },
+    "Kering Sedang": {
+        "desc": "Kandungan air tanah mulai menurun. Tanaman mulai menunjukkan gejala stres ringan (daun sedikit layu di siang hari).",
+        "saran": "Mulai terapkan irigasi hemat air (misal: irigasi selang-seling). Pertimbangkan tanam palawija hemat air.",
+        "color": "#F39C12"
+    },
+    "Kering Parah": {
+        "desc": "Kekeringan mulai merusak tanaman. Pertumbuhan terhambat, potensi gagal panen meningkat.",
+        "saran": "Prioritaskan air untuk fase kritis tanaman (pembungaan/pengisian biji). Lakukan penyiraman di pagi/sore hari.",
+        "color": "#E67E22"
+    },
+    "Kering Sangat Parah": {
+        "desc": "Krisis air, potensi gagal panen total (puso). Tanah retak dan sangat keras.",
+        "saran": "Fokus penyelamatan tanaman yang masih bisa produktif. Siapkan lahan untuk musim tanam berikutnya (menunggu hujan).",
+        "color": "#C0392B"
+    }
 }
 
-# [DIUBAH] Mapping kelas dari Teks ke Angka untuk kebutuhan plotting grafik
-# Urutan angka menentukan posisi di sumbu Y grafik
-CLASS_TO_NUMERIC = {
-    "Sangat Basah": 1,
-    "Basah Ekstrem": 2,
-    "Basah Sedang": 3,
-    "Normal": 4,
-    "Kering Sedang": 5,
-    "Kering Parah": 6,
-    "Kering Sangat Parah": 7
-}
-# Kebalikannya, untuk memberi label pada sumbu Y grafik
+
+CLASS_TO_NUMERIC = { "Sangat Basah": 1, "Basah Ekstrem": 2, "Basah Sedang": 3, "Normal": 4, "Kering Sedang": 5, "Kering Parah": 6, "Kering Sangat Parah": 7 }
 NUMERIC_TO_CLASS_LABELS = list(CLASS_TO_NUMERIC.keys())
-
-
-# [DIUBAH] Direktori data disesuaikan dengan path yang Anda berikan
-# r"..." digunakan agar path Windows dapat dibaca dengan benar oleh Python
 DATA_DIR = "dataset"
 
-# [DIUBAH] Daftar 15 Kecamatan (pastikan nama file CSV sesuai)
-# Contoh: "Indralaya" akan membaca file "indralaya.csv"
+# Pastikan nama file "Muara Kuang.csv" sudah benar, termasuk spasinya
 KECAMATAN_FILES = {
-    "Indralaya": "indralaya.csv",
-    "Indralaya Utara": "indralaya_utara.csv",
-    "Indralaya Selatan": "indralaya_selatan.csv",
-    "Tanjung Batu": "tanjung_batu.csv",
-    "Tanjung Raja": "tanjung_raja.csv",
-    "Rantau Alai": "rantau_alai.csv",
-    "Rantau Panjang": "rantau_panjang.csv",
-    "Sungai Pinang": "sungai_pinang.csv",
-    "Pemulutan": "pemulutan.csv",
-    "Pemulutan Barat": "pemulutan_barat.csv",
-    "Pemulutan Selatan": "pemulutan_selatan.csv",
-    "Kandis": "kandis.csv",
-    "Payaraman": "payaraman.csv",
-    "Muara Kuang": "Muara Kuang.csv",
-    "Lubuk Keliat": "lubuk_keliat.csv"
+    "Indralaya": "indralaya.csv", "Indralaya Utara": "indralaya_utara.csv", "Indralaya Selatan": "indralaya_selatan.csv",
+    "Tanjung Batu": "tanjung_batu.csv", "Tanjung Raja": "tanjung_raja.csv", "Rantau Alai": "rantau_alai.csv",
+    "Rantau Panjang": "rantau_panjang.csv", "Sungai Pinang": "sungai_pinang.csv", "Pemulutan": "pemulutan.csv",
+    "Pemulutan Barat": "pemulutan_barat.csv", "Pemulutan Selatan": "pemulutan_selatan.csv", "Kandis": "kandis.csv",
+    "Payaraman": "payaraman.csv", "Muara Kuang": "Muara Kuang.csv", "Lubuk Keliat": "lubuk_keliat.csv"
 }
 
 # =================================================================================
 # FUNGSI BANTUAN
 # =================================================================================
 
-# [DIUBAH TOTAL] Fungsi untuk memuat data disesuaikan dengan format CSV baru
 @st.cache_data
 def load_data(file_path):
-    """
-    Memuat data dari file CSV 1 kolom, tanpa header.
-    Membuat kolom Tanggal secara otomatis.
-    Memetakan kelas teks ke numerik untuk plotting.
-    """
     try:
-        # Baca CSV 1 kolom tanpa header, beri nama kolom 'Kelas_Kekeringan'
         df = pd.read_csv(file_path, header=None, names=['Kelas_Kekeringan'])
         
-        # Buat kolom Tanggal. Asumsi data dimulai dari 1 Januari 2023
-        # Sesuaikan start_date jika data Anda dimulai dari tanggal lain
-        start_date = "2024-12-31"
+        # [DIUBAH] Logika pembuatan tanggal diperbaiki
+        start_date_str = "2024-01-01"
+        start_date = datetime.strptime(start_date_str, "%Y-%m-%d").date()
+        today = date.today()
+        
+        # Buat rentang tanggal dari start_date HANYA sampai hari ini
         num_rows = len(df)
-        df['Tanggal'] = pd.date_range(start=start_date, periods=num_rows, freq='D')
+        all_dates = pd.date_range(start=start_date, periods=num_rows, freq='D')
+        
+        # Filter tanggal agar tidak melebihi hari ini
+        valid_dates = all_dates[all_dates.date <= today]
+        
+        # Potong dataframe agar sesuai dengan tanggal yang valid
+        df = df.iloc[:len(valid_dates)]
+        df['Tanggal'] = valid_dates
 
-        # Buat kolom numerik untuk diplot di grafik
         df['Kelas_Numerik'] = df['Kelas_Kekeringan'].map(CLASS_TO_NUMERIC)
         
         return df
         
     except FileNotFoundError:
-        st.error(f"File data tidak ditemukan di path: {file_path}. Pastikan nama file CSV sudah benar dan folder dataset ada.")
+        st.error(f"File data tidak ditemukan: {file_path}. Pastikan nama file benar dan folder '{DATA_DIR}' ada.")
         return None
     except Exception as e:
         st.error(f"Terjadi kesalahan saat memuat data: {e}")
@@ -106,8 +109,8 @@ def load_data(file_path):
 # =================================================================================
 
 # --- HEADER ---
-st.title("☀️ Dashboard Prediksi Kekeringan Ogan Ilir")
-st.markdown("Analisis dan visualisasi data prediksi tingkat kekeringan per kecamatan di Kabupaten Ogan Ilir.")
+st.title("☀️ Dashboard Prediksi Kekeringan Pertanian Ogan Ilir")
+st.markdown("Analisis dan visualisasi data prediksi tingkat kekeringan untuk mendukung keputusan pertanian di Kabupaten Ogan Ilir.")
 st.markdown("---")
 
 # --- SIDEBAR (PANEL KONTROL) ---
@@ -118,50 +121,45 @@ selected_kecamatan_name = st.sidebar.selectbox(
     index=0
 )
 
-# Memuat data berdasarkan pilihan kecamatan
 file_name = KECAMATAN_FILES[selected_kecamatan_name]
 file_path = os.path.join(DATA_DIR, file_name)
 df = load_data(file_path)
 
-if df is not None:
-    # Pilihan tanggal di sidebar
+if df is not None and not df.empty:
     selected_date = st.sidebar.date_input(
         "Pilih Tanggal Prediksi:",
-        value=df['Tanggal'].max(), # Default ke tanggal terbaru
+        value=df['Tanggal'].max(), # Default ke tanggal terbaru yang valid
         min_value=df['Tanggal'].min(),
-        max_value=df['Tanggal'].max()
+        max_value=df['Tanggal'].max()  # max_value sekarang adalah hari ini (atau tanggal terakhir data)
     )
-    selected_date = pd.to_datetime(selected_date).normalize() # normalize() untuk hapus info jam/menit
+    selected_date = pd.to_datetime(selected_date).normalize()
 
     # --- TAMPILAN UTAMA (MAIN AREA) ---
     st.header(f"📍 Status Prediksi di Kecamatan: **{selected_kecamatan_name}**")
     st.caption(f"Data untuk tanggal: **{selected_date.strftime('%d %B %Y')}**")
 
-    # Ambil data untuk tanggal yang dipilih
     prediction_data = df[df['Tanggal'] == selected_date]
 
     if not prediction_data.empty:
-        # Dapatkan kelas kekeringan (sekarang berupa string)
         current_class = prediction_data['Kelas_Kekeringan'].iloc[0]
-        class_info = DROUGHT_CLASSES[current_class]
+        class_info = DROUGHT_CLASSES.get(current_class, {"desc": "Kelas tidak dikenal.", "saran": "Periksa kembali data.", "color": "#808080"})
 
         # Tampilkan status dengan metrik dan warna
         col1, col2 = st.columns([1, 2])
         with col1:
-            st.metric(
-                label="Level Prediksi",
-                value=current_class, # Langsung tampilkan nama kelasnya
+             st.markdown(f"##### Level Prediksi")
+             st.markdown(
+                f"""
+                <div style="background-color: {class_info['color']}; padding: 25px; border-radius: 10px; text-align: center;">
+                    <h2 style="color: white; margin: 0; font-weight: bold;">{current_class}</h2>
+                </div>
+                """, unsafe_allow_html=True
             )
         with col2:
-            st.markdown(
-                f"""
-                <div style="background-color: {class_info['color']}; padding: 20px; border-radius: 10px; text-align: center; height: 100%;">
-                    <h3 style="color: white; margin: 0;">{current_class}</h3>
-                </div>
-                """,
-                unsafe_allow_html=True
-            )
-        st.info(f"**💡 Deskripsi:** {class_info['desc']}")
+            st.markdown("##### Deskripsi Kondisi Pertanian")
+            st.info(f"**“** {class_info['desc']} **”**")
+            st.markdown("##### Saran / Tindakan Pertanian")
+            st.warning(f"**💡** {class_info['saran']}")
 
     else:
         st.warning("Tidak ada data prediksi untuk tanggal yang dipilih.")
@@ -170,50 +168,65 @@ if df is not None:
 
     # --- GRAFIK INTERAKTIF ---
     st.header("📈 Grafik Historis Tingkat Kekeringan")
-    st.markdown(f"Visualisasi tren prediksi kekeringan di **Kecamatan {selected_kecamatan_name}** dari waktu ke waktu.")
+    st.markdown(f"Visualisasi tren prediksi kekeringan di **Kecamatan {selected_kecamatan_name}**.")
 
     fig = px.line(
-        df,
-        x='Tanggal',
-        y='Kelas_Numerik', # [DIUBAH] Gunakan kolom numerik untuk sumbu Y
-        markers=True,
+        df, x='Tanggal', y='Kelas_Numerik', markers=True,
         labels={"Tanggal": "Periode Waktu", "Kelas_Numerik": "Level Kekeringan"},
-        custom_data=['Kelas_Kekeringan'], # Kirim nama kelas asli untuk ditampilkan di hover
-        template="plotly_white"
+        custom_data=['Kelas_Kekeringan'], template="plotly_white"
     )
-
-    # Kustomisasi tampilan grafik
-    fig.update_traces(
-        # [DIUBAH] Tampilkan nama kelas asli saat hover
-        hovertemplate="<b>Tanggal:</b> %{x|%d %B %Y}<br><b>Level:</b> %{customdata[0]}<extra></extra>"
-    )
-
+    fig.update_traces(hovertemplate="<b>Tanggal:</b> %{x|%d %B %Y}<br><b>Level:</b> %{customdata[0]}<extra></extra>")
     fig.update_layout(
-        # [DIUBAH] Tampilkan label teks di sumbu Y, bukan angka
-        yaxis=dict(
-            tickmode='array',
-            tickvals=list(CLASS_TO_NUMERIC.values()),
-            ticktext=NUMERIC_TO_CLASS_LABELS
-        ),
+        yaxis=dict(tickmode='array', tickvals=list(CLASS_TO_NUMERIC.values()), ticktext=NUMERIC_TO_CLASS_LABELS),
         title={'text': f"Tren Kekeringan di {selected_kecamatan_name}", 'y':0.9, 'x':0.5, 'xanchor': 'center', 'yanchor': 'top'},
         hovermode="x unified"
     )
-
     st.plotly_chart(fig, use_container_width=True)
 
     # --- PENJELASAN KELAS KEKERINGAN ---
     st.markdown("---")
-    with st.expander("ℹ️ Klik di sini untuk melihat penjelasan setiap kelas kekeringan"):
+    with st.expander("ℹ️ Klik di sini untuk melihat penjelasan detail setiap kelas kekeringan"):
         for class_name, info in DROUGHT_CLASSES.items():
-            st.markdown(
-                f"""
-                <div style="display: flex; align-items: center; margin-bottom: 10px;">
-                    <div style="width: 20px; height: 20px; background-color: {info['color']}; border-radius: 5px; margin-right: 10px;"></div>
-                    <div><b>{class_name}:</b> {info['desc']}</div>
+            st.markdown(f"""
+            <div style="display: flex; align-items: top; margin-bottom: 12px; border-left: 5px solid {info['color']}; padding-left: 10px;">
+                <div>
+                    <b style="font-size: 1.1em;">{class_name}</b><br>
+                    <b>Deskripsi:</b> {info['desc']}<br>
+                    <b>Saran:</b> {info['saran']}
                 </div>
-                """,
-                unsafe_allow_html=True
-            )
+            </div>
+            """, unsafe_allow_html=True)
+            
+    # --- [DITAMBAHKAN] BAGIAN LOGO ---
+    st.markdown("---")
+    st.subheader("Didukung Oleh:")
 
+    # Ganti nama file 'logoX.png' dengan nama file logo Anda yang sebenarnya
+    logo_files = [
+        "logos/logo1.png", "logos/logo2.png", "logos/logo3.png", "logos/logo4.png",
+        "logos/logo5.png", "logos/logo6.png", "logos/logo7.png", "logos/logo8.png"
+    ]
+
+    # Bagi menjadi dua baris, masing-masing 4 kolom
+    row1_cols = st.columns(4)
+    row2_cols = st.columns(4)
+
+    for i, col in enumerate(row1_cols):
+        if i < len(logo_files):
+            try:
+                col.image(logo_files[i], use_column_width='auto')
+            except Exception as e:
+                col.warning(f"Logo {i+1} gagal dimuat.")
+
+    for i, col in enumerate(row2_cols):
+        if (i+4) < len(logo_files):
+            try:
+                col.image(logo_files[i+4], use_column_width='auto')
+            except Exception as e:
+                col.warning(f"Logo {i+5} gagal dimuat.")
+
+
+elif df is None:
+    st.error("Gagal memuat data. Silakan periksa pesan error di atas.")
 else:
-    st.error("Gagal memuat data. Mohon periksa kembali path folder dan nama file CSV Anda.")
+    st.warning("Data untuk kecamatan ini kosong atau tidak valid.")
