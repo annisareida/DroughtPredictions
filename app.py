@@ -10,7 +10,7 @@ from datetime import datetime, date
 
 st.set_page_config(
     page_title="Prediksi Kekeringan Ogan Ilir",
-    page_icon="💧",
+    page_icon="logos/logo7.jpg",
     layout="wide",
     initial_sidebar_state="expanded"
 )
@@ -103,7 +103,13 @@ menu = st.sidebar.radio("Pilih Halaman:", ["Dashboard", "About"])
 # HALAMAN DASHBOARD
 # =================================================================================
 if menu == "Dashboard":
-    st.title("☀️ Dashboard Prediksi Kekeringan Pertanian Ogan Ilir")
+    # Header dengan logo7
+    col_header1, col_header2 = st.columns([0.1, 0.9])
+    with col_header1:
+        st.image("logos/logo7.png", width=60)   # logo di header
+    with col_header2:
+        st.title("☀️ Dashboard Prediksi Kekeringan Pertanian Ogan Ilir")
+
     st.markdown("Analisis dan visualisasi data prediksi tingkat kekeringan untuk mendukung keputusan pertanian di Kabupaten Ogan Ilir.")
     st.markdown("---")
 
@@ -214,13 +220,14 @@ elif menu == "About":
     for i, col in enumerate(row1_cols):
         if i < len(logo_files):
             try:
-                col.image(logo_files[i], use_container_width='auto')
+                col.image(logo_files[i], width=120)  # kecilkan ukuran logo
             except:
                 col.warning(f"Logo {i+1} gagal dimuat.")
 
     for i, col in enumerate(row2_cols):
         if (i+4) < len(logo_files):
             try:
-                col.image(logo_files[i+4], use_container_width='auto')
+                col.image(logo_files[i+4], width=120)  # kecilkan ukuran logo
             except:
                 col.warning(f"Logo {i+5} gagal dimuat.")
+
