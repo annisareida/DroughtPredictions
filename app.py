@@ -79,7 +79,7 @@ def load_data(file_path):
         
         # [DIUBAH] Logika dikembalikan agar data masa depan (prediksi) bisa ditampilkan
         # Tanggal akan dibuat untuk seluruh baris data tanpa dipotong oleh tanggal hari ini.
-        start_date = "2025-01-01"
+        start_date = "2024-31-12"
         num_rows = len(df)
         df['Tanggal'] = pd.date_range(start=start_date, periods=num_rows, freq='D')
 
