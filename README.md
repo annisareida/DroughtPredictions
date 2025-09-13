@@ -5,10 +5,11 @@ This repository contains the implementation of a hybrid **VAR-LSTM model** for d
 ## 📊 Dataset  
 The dataset was obtained from [NASA POWER](https://power.larc.nasa.gov/) covering the period **2010–2024**.  
 - Input features multivariate climate variables:
-   -🌡️ Air Temperature at 2m 
-   -💧 Dew Point Temperature at 2m
-   -🍃 Wind Speed at 10m 
-   -☀️ All Sky Surface Shortwave Downward Irradiance  
+The model uses multivariate input features:  
+- 🌡️ **Air Temperature at 2m (T2M)**  
+- 💧 **Dew Point Temperature at 2m (T2MDEW)**  
+- 🍃 **Wind Speed at 10m (WS10M)**  
+- ☀️ **All Sky Surface Shortwave Downward Irradiance (ALLSKY_SFC_SW_DWN)**  
 - Target: rainfall prediction for generating SPI-based drought classification.  
 
 ## 🔄 Project Workflow  
