@@ -4,7 +4,7 @@ import plotly.express as px
 import os
 from datetime import datetime, date
 
-# =================================================================================
+# = an================================================================================
 # KONFIGURASI HALAMAN DAN DATA
 # =================================================================================
 
@@ -15,7 +15,7 @@ st.set_page_config(
     initial_sidebar_state="expanded"
 )
 
-# [DIUBAH] Deskripsi dan saran disesuaikan untuk pertanian & musim tanam
+# Deskripsi dan saran disesuaikan untuk pertanian & musim tanam
 DROUGHT_CLASSES = {
     "Sangat Basah": {
         "desc": "Kondisi tanah sangat jenuh air. Risiko tinggi busuk akar dan serangan jamur. Lahan sawah tergenang.",
@@ -77,21 +77,11 @@ def load_data(file_path):
     try:
         df = pd.read_csv(file_path, header=None, names=['Kelas_Kekeringan'])
         
-        # [DIUBAH] Logika pembuatan tanggal diperbaiki
-        start_date_str = "2024-01-01"
-        start_date = datetime.strptime(start_date_str, "%Y-%m-%d").date()
-        today = date.today()
-        
-        # Buat rentang tanggal dari start_date HANYA sampai hari ini
+        # [DIUBAH] Logika dikembalikan agar data masa depan (prediksi) bisa ditampilkan
+        # Tanggal akan dibuat untuk seluruh baris data tanpa dipotong oleh tanggal hari ini.
+        start_date = "2024-01-01"
         num_rows = len(df)
-        all_dates = pd.date_range(start=start_date, periods=num_rows, freq='D')
-        
-        # Filter tanggal agar tidak melebihi hari ini
-        valid_dates = all_dates[all_dates.date <= today]
-        
-        # Potong dataframe agar sesuai dengan tanggal yang valid
-        df = df.iloc[:len(valid_dates)]
-        df['Tanggal'] = valid_dates
+        df['Tanggal'] = pd.date_range(start=start_date, periods=num_rows, freq='D')
 
         df['Kelas_Numerik'] = df['Kelas_Kekeringan'].map(CLASS_TO_NUMERIC)
         
@@ -128,9 +118,9 @@ df = load_data(file_path)
 if df is not None and not df.empty:
     selected_date = st.sidebar.date_input(
         "Pilih Tanggal Prediksi:",
-        value=df['Tanggal'].max(), # Default ke tanggal terbaru yang valid
+        value=df['Tanggal'].max(), # Default ke tanggal terbaru dalam data
         min_value=df['Tanggal'].min(),
-        max_value=df['Tanggal'].max()  # max_value sekarang adalah hari ini (atau tanggal terakhir data)
+        max_value=df['Tanggal'].max()  # max_value sekarang adalah tanggal terakhir dari data prediksi
     )
     selected_date = pd.to_datetime(selected_date).normalize()
 
@@ -167,8 +157,8 @@ if df is not None and not df.empty:
     st.markdown("---")
 
     # --- GRAFIK INTERAKTIF ---
-    st.header("📈 Grafik Historis Tingkat Kekeringan")
-    st.markdown(f"Visualisasi tren prediksi kekeringan di **Kecamatan {selected_kecamatan_name}**.")
+    st.header("📈 Grafik Historis dan Prediksi Tingkat Kekeringan")
+    st.markdown(f"Visualisasi tren kekeringan di **Kecamatan {selected_kecamatan_name}**.")
 
     fig = px.line(
         df, x='Tanggal', y='Kelas_Numerik', markers=True,
@@ -197,7 +187,7 @@ if df is not None and not df.empty:
             </div>
             """, unsafe_allow_html=True)
             
-    # --- [DITAMBAHKAN] BAGIAN LOGO ---
+    # --- BAGIAN LOGO ---
     st.markdown("---")
     st.subheader("Didukung Oleh:")
 
