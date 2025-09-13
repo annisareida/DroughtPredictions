@@ -85,7 +85,7 @@ def load_data(file_path):
         
         # Buat kolom Tanggal. Asumsi data dimulai dari 1 Januari 2023
         # Sesuaikan start_date jika data Anda dimulai dari tanggal lain
-        start_date = "2025-01-01"
+        start_date = "2024-12-31"
         num_rows = len(df)
         df['Tanggal'] = pd.date_range(start=start_date, periods=num_rows, freq='D')
 
