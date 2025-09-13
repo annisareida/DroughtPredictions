@@ -204,7 +204,7 @@ if df is not None and not df.empty:
     # Ganti nama file 'logoX.png' dengan nama file logo Anda yang sebenarnya
     logo_files = [
         "logos/logo1.png", "logos/logo2.png", "logos/logo3.png", "logos/logo4.png",
-        "logos/logo5.png", "logos/logo6.jpg", "logos/logo7.png""
+        "logos/logo5.png", "logos/logo6.jpg", "logos/logo7.png"
     ]
 
     # Bagi menjadi dua baris, masing-masing 4 kolom
