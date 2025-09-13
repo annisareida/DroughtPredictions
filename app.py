@@ -63,7 +63,7 @@ KECAMATAN_FILES = {
     "Pemulutan Selatan": "pemulutan_selatan.csv",
     "Kandis": "kandis.csv",
     "Payaraman": "payaraman.csv",
-    "Muara Kuang": "muara_kuang.csv",
+    "Muara Kuang": "Muara Kuang.csv",
     "Lubuk Keliat": "lubuk_keliat.csv"
 }
 
