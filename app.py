@@ -10,7 +10,7 @@ from datetime import datetime, date
 
 st.set_page_config(
     page_title="Prediksi Kekeringan Ogan Ilir",
-    page_icon="logos/logo7.jpg",
+    page_icon="logos/logo7.png",
     layout="wide",
     initial_sidebar_state="expanded"
 )
