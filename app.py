@@ -22,12 +22,12 @@ DROUGHT_CLASSES = {
         "saran": "Perbaiki drainase, buat saluran pembuangan tambahan, dan lakukan pengendalian hama/penyakit secara intensif.",
         "color": "#154360"
     },
-    "Basah Ekstrem": {
+    "Basah": {
         "desc": "Ketersediaan air sangat tinggi, sawah rentan tergenang lama sehingga fase awal pertumbuhan padi terganggu.",
         "saran": "Pastikan irigasi berfungsi baik, lakukan pengeringan jika perlu, dan atur jadwal tanam agar tidak bertepatan dengan puncak hujan.",
         "color": "#1A5276"
     },
-    "Basah Sedang": {
+    "Agak Basah": {
         "desc": "Kondisi air melimpah dan relatif stabil, cukup baik untuk pertumbuhan padi, namun genangan masih mungkin terjadi pada lahan dengan drainase buruk.",
         "saran": "Optimalkan pemanfaatan air, cegah genangan berlebih, dan gunakan varietas padi yang tahan genangan bila curah hujan tinggi.",
         "color": "#4E80B4"
@@ -37,17 +37,17 @@ DROUGHT_CLASSES = {
         "saran": "Pertahankan pola tanam yang ada, lakukan pemupukan sesuai anjuran, dan jaga sistem irigasi agar tetap stabil.",
         "color": "#2ECC71"
     },
-    "Kering Sedang": {
+    "Agak Kering": {
         "desc": "Ketersediaan air mulai terbatas, sawah menunjukkan tanda retakan, dan padi berisiko mengalami stres kekurangan air.",
         "saran": "Terapkan irigasi berselang (alternate wetting and drying), kendalikan gulma agar tidak berebut air, dan fokuskan air pada fase kritis padi (anakan maksimum dan pembungaan).",
         "color": "#F39C12"
     },
-    "Kering Parah": {
+    "Kering": {
         "desc": "Kekeringan semakin nyata, suplai air irigasi tidak stabil, pertumbuhan padi melambat, dan hasil panen berpotensi turun signifikan.",
         "saran": "Gunakan varietas tahan kekeringan, lakukan pompanisasi dari sumber terdekat, dan sesuaikan waktu tanam dengan ketersediaan air.",
         "color": "#E67E22"
     },
-    "Kering Sangat Parah": {
+    "Sangat Kering": {
         "desc": "Kekeringan ekstrem, sawah sulit ditanami padi, risiko gagal panen sangat tinggi.",
         "saran": "Tunda penanaman padi hingga kondisi membaik, alihkan sementara ke tanaman lebih tahan kering, serta lakukan konservasi air seperti pembuatan embung atau penampungan air hujan.",
         "color": "#C0392B"
@@ -56,12 +56,12 @@ DROUGHT_CLASSES = {
 
 CLASS_TO_NUMERIC = { 
     "Sangat Basah": 1, 
-    "Basah Ekstrem": 2, 
-    "Basah Sedang": 3, 
+    "Basah": 2, 
+    "Agak Basah": 3, 
     "Normal": 4, 
-    "Kering Sedang": 5, 
-    "Kering Parah": 6, 
-    "Kering Sangat Parah": 7 
+    "Agak Kering": 5, 
+    "Kering": 6, 
+    "Sangat Kering": 7 
 }
 NUMERIC_TO_CLASS_LABELS = list(CLASS_TO_NUMERIC.keys())
 DATA_DIR = "dataset"
