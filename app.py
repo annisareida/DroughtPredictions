@@ -79,19 +79,39 @@ KECAMATAN_FILES = {
 # =================================================================================
 @st.cache_data
 def load_data(file_path):
-    try:
-        df = pd.read_csv(file_path, header=None, names=['Kelas_Kekeringan'])
-        start_date = "2024-12-31"
-        num_rows = len(df)
-        df['Tanggal'] = pd.date_range(start=start_date, periods=num_rows, freq='D')
-        df['Kelas_Numerik'] = df['Kelas_Kekeringan'].map(CLASS_TO_NUMERIC)
-        return df
-    except FileNotFoundError:
-        st.error(f"File data tidak ditemukan: {file_path}. Pastikan nama file benar dan folder '{DATA_DIR}' ada.")
-        return None
-    except Exception as e:
-        st.error(f"Terjadi kesalahan saat memuat data: {e}")
-        return None
+    import pandas as pd
+
+    # baca CSV
+    df = pd.read_csv(file_path)
+
+    # kalau kolomnya ada 'KATEGORI_SPI', ubah jadi 'Kelas_Kekeringan'
+    if "KATEGORI_SPI" in df.columns:
+        df.rename(columns={"KATEGORI_SPI": "Kelas_Kekeringan"}, inplace=True)
+    else:
+        # kalau CSV tanpa header, pastikan kolom diberi nama
+        df.columns = ["Kelas_Kekeringan"]
+
+    # rapikan spasi
+    df['Kelas_Kekeringan'] = df['Kelas_Kekeringan'].astype(str).str.strip()
+
+    # mapping kategori ke angka
+    CLASS_TO_NUMERIC = {
+        "Sangat Kering": 0,
+        "Kering": 1,
+        "Agak Kering": 2,
+        "Normal": 4,
+        "Agak Basah": 3,
+        "Basah": 5,
+        "Sangat Basah": 6
+    }
+    df['Kelas_Numerik'] = df['Kelas_Kekeringan'].map(CLASS_TO_NUMERIC)
+
+    # generate tanggal sesuai jumlah baris
+    start_date = "2024-12-31"
+    num_rows = len(df)
+    df['Tanggal'] = pd.date_range(start=start_date, periods=num_rows, freq='D')
+
+    return df
 
 # =================================================================================
 # SIDEBAR NAVIGASI
