@@ -192,7 +192,12 @@ if menu == "Dashboard":
         )
         fig.update_traces(hovertemplate="<b>Tanggal:</b> %{x|%d %B %Y}<br><b>Level:</b> %{customdata[0]}<extra></extra>")
         fig.update_layout(
-            yaxis=dict(tickmode='array', tickvals=list(CLASS_TO_NUMERIC.values()), ticktext=NUMERIC_TO_CLASS_LABELS),
+            yaxis=dict(
+                tickmode='array',
+                tickvals=list(CLASS_TO_NUMERIC.values()),
+                ticktext=NUMERIC_TO_CLASS_LABELS,
+                range=[1, 7]   # paksa tampil semua level dari Sangat Basah (1) sampai Sangat Kering (7)
+            ),
             title={'text': f"Tren Kekeringan di {selected_kecamatan_name}", 'y':0.9, 'x':0.5, 'xanchor': 'center', 'yanchor': 'top'},
             hovermode="x unified"
         )
