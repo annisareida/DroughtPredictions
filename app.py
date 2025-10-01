@@ -67,11 +67,11 @@ NUMERIC_TO_CLASS_LABELS = list(CLASS_TO_NUMERIC.keys())
 DATA_DIR = "dataset"
 
 KECAMATAN_FILES = {
-    "Indralaya": "indralaya.csv", "Indralaya Utara": "indralaya_utara.csv", "Indralaya Selatan": "indralaya_selatan.csv",
-    "Tanjung Batu": "tanjung_batu.csv", "Tanjung Raja": "tanjung_raja.csv", "Rantau Alai": "rantau_alai.csv",
-    "Rantau Panjang": "rantau_panjang.csv", "Sungai Pinang": "sungai_pinang.csv", "Pemulutan": "pemulutan.csv",
-    "Pemulutan Barat": "pemulutan_barat.csv", "Pemulutan Selatan": "pemulutan_selatan.csv", "Kandis": "kandis.csv",
-    "Payaraman": "payaraman.csv", "Muara Kuang": "Muara Kuang.csv", "Lubuk Keliat": "lubuk_keliat.csv"
+    "Indralaya": "indralaya.csv", "Indralaya Utara": "indralaya utara.csv", "Indralaya Selatan": "indralaya selatan.csv",
+    "Tanjung Batu": "tanjung batu.csv", "Tanjung Raja": "tanjung raja.csv", "Rantau Alai": "rantau alai.csv",
+    "Rantau Panjang": "rantau panjang.csv", "Sungai Pinang": "sungai pinang.csv", "Pemulutan": "pemulutan.csv",
+    "Pemulutan Barat": "pemulutan barat.csv", "Pemulutan Selatan": "pemulutan selatan.csv", "Kandis": "kandis.csv",
+    "Rambang Kuang": "rambang kuang.csv", "Muara Kuang": "muara kuang.csv", "Lubuk Keliat": "lubuk keliat.csv"
 }
 
 # =================================================================================
