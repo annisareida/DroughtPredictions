@@ -95,14 +95,14 @@ def load_data(file_path):
     df['Kelas_Kekeringan'] = df['Kelas_Kekeringan'].astype(str).str.strip()
 
     # mapping kategori ke angka
-    CLASS_TO_NUMERIC = {
-        "Sangat Kering": 0,
-        "Kering": 1,
-        "Agak Kering": 2,
-        "Normal": 4,
-        "Agak Basah": 3,
-        "Basah": 5,
-        "Sangat Basah": 6
+    CLASS_TO_NUMERIC = { 
+        "Sangat Basah": 1, 
+        "Basah": 2, 
+        "Agak Basah": 3, 
+        "Normal": 4, 
+        "Agak Kering": 5, 
+        "Kering": 6, 
+        "Sangat Kering": 7 
     }
     df['Kelas_Numerik'] = df['Kelas_Kekeringan'].map(CLASS_TO_NUMERIC)
 
