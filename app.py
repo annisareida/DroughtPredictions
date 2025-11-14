@@ -116,6 +116,31 @@ def load_data(file_path):
 # =================================================================================
 # SIDEBAR NAVIGASI
 # =================================================================================
+
+# --- TAMBAHAN UNTUK 5 LOGO DI ATAS ---
+# Daftar file logo yang ingin ditampilkan
+sidebar_logos = [
+    "logos/logo1.png", "logos/logo2.png", "logos/logo6.png", 
+    "logos/logo7.png", "logos/logo8.png"
+]
+
+# Buat 5 kolom di sidebar
+logo_cols = st.sidebar.columns(5)
+
+# Tampilkan setiap logo di kolomnya masing-masing
+for i, col in enumerate(logo_cols):
+    try:
+        # Atur lebar agar pas di sidebar, misal 50px
+        col.image(sidebar_logos[i], width=50) 
+    except Exception:
+        # Jika logo gagal dimuat, tampilkan peringatan kecil
+        col.caption(f"L{i+1}") 
+
+# Tambahkan garis pemisah
+st.sidebar.markdown("---") 
+# --- AKHIR TAMBAHAN ---
+
+
 st.sidebar.title("📌 Navigasi")
 menu = st.sidebar.radio("Pilih Halaman:", ["Dashboard", "About"])
 
@@ -126,7 +151,7 @@ if menu == "Dashboard":
     # Header dengan logo7
     col_header1, col_header2 = st.columns([0.1, 0.9])
     with col_header1:
-        st.image("logos/logo7.png", width=60)   # logo di header
+        st.image("logos/logo7.png", width=60)    # logo di header
     with col_header2:
         st.title("☀️ Dashboard Prediksi Kekeringan Pertanian Ogan Ilir")
 
@@ -196,7 +221,7 @@ if menu == "Dashboard":
                 tickmode='array',
                 tickvals=list(CLASS_TO_NUMERIC.values()),
                 ticktext=NUMERIC_TO_CLASS_LABELS,
-                range=[1, 7]   # paksa tampil semua level dari Sangat Basah (1) sampai Sangat Kering (7)
+                range=[1, 7]    # paksa tampil semua level dari Sangat Basah (1) sampai Sangat Kering (7)
             ),
             title={'text': f"Tren Kekeringan di {selected_kecamatan_name}", 'y':0.9, 'x':0.5, 'xanchor': 'center', 'yanchor': 'top'},
             hovermode="x unified"
@@ -225,8 +250,7 @@ elif menu == "About":
     Website ini dibuat untuk menampilkan hasil riset tim **PKM RE Universitas Sriwijaya 2025** dengan judul:  
     **“Penerapan Long Short-Term Memory dalam Memprediksi Curah Hujan untuk Klasifikasi Kekeringan berdasarkan Standardized Precipitation Index di Kabupaten Ogan Ilir.”**
 
-    👩‍💻 **Tim Peneliti**  
-    - Ketua: Annisa Reida Raheima (Teknik Informatika)  
+    👩‍💻 **Tim Peneliti** - Ketua: Annisa Reida Raheima (Teknik Informatika)  
     - Anggota: Evan Febrian (Teknik Informatika), Nabila Kurnia Aprianti (Teknik Informatika), Dio Subayu Jonathan (Ilmu Tanah)  
     - Dosen Pembimbing: Ibu Alvi Syahrini Utami, S.Si., M.Kom.  
 
@@ -255,4 +279,3 @@ elif menu == "About":
                 col.image(logo_files[i+4], width=120)  # kecilkan ukuran logo
             except:
                 col.warning(f"Logo {i+5} gagal dimuat.")
-
