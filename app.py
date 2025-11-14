@@ -113,36 +113,41 @@ def load_data(file_path):
 
     return df
 
+# ... (kode import dan konfigurasi halaman tetap sama) ...
+
 # =================================================================================
 # SIDEBAR NAVIGASI
 # =================================================================================
 
-# --- TAMBAHAN UNTUK 5 LOGO DI ATAS ---
-# Daftar file logo yang ingin ditampilkan
 sidebar_logos = [
-    "logos/logo1.png", "logos/logo2.png", "logos/logo8.png", 
-    "logos/logo6.jpg", "logos/logo7.png"
+    "logos/logo2.png", "logos/logo8.png", 
+    "logos/logo1.png", "logos/logo6.jpg", "logos/logo7.png"
 ]
 
-# Buat 5 kolom di sidebar
-logo_cols = st.sidebar.columns(5)
-
-# Tampilkan setiap logo di kolomnya masing-masing
-for i, col in enumerate(logo_cols):
+# Baris 1: 2 Logo
+row1_cols = st.sidebar.columns(2)
+for i in range(2):
     try:
-        # Atur lebar agar pas di sidebar, misal 50px
-        col.image(sidebar_logos[i], width=50) 
+        with row1_cols[i]:
+            # Gunakan use_container_width=True agar logo menyesuaikan lebar kolom
+            st.image(sidebar_logos[i], use_container_width=True) 
     except Exception:
-        # Jika logo gagal dimuat, tampilkan peringatan kecil
-        col.caption(f"L{i+1}") 
+        pass
 
-# Tambahkan garis pemisah
+# Baris 2: 3 Logo
+row2_cols = st.sidebar.columns(3)
+for i in range(3):
+    try:
+        with row2_cols[i]:
+            # Index diambil mulai dari 2 (logo ke-3)
+            st.image(sidebar_logos[i+2], use_container_width=True)
+    except Exception:
+        pass
+
 st.sidebar.markdown("---") 
-# --- AKHIR TAMBAHAN ---
-
+# --- AKHIR LOGO ---
 
 st.sidebar.title("📌 Navigasi")
-menu = st.sidebar.radio("Pilih Halaman:", ["Dashboard", "About"])
 
 # =================================================================================
 # HALAMAN DASHBOARD
