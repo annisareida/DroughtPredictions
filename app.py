@@ -121,7 +121,7 @@ def load_data(file_path):
 
 sidebar_logos = [
     "logos/logo2.png", "logos/logo8.png", 
-    "logos/logo1.png", "logos/logo6.jpg", "logos/logo7.png"
+    "logos/logo1.png", "logos/logo6.png", "logos/logo7.png"
 ]
 
 # Baris 1: 2 Logo
@@ -266,7 +266,7 @@ elif menu == "About":
     st.subheader("Didukung Oleh:")
     logo_files = [
         "logos/logo1.png", "logos/logo2.png", "logos/logo8.png", "logos/logo3.png",
-        "logos/logo4.png", "logos/logo5.png", "logos/logo6.jpg", "logos/logo7.png"
+        "logos/logo4.png", "logos/logo5.png", "logos/logo6.png", "logos/logo7.png"
     ]
 
     row1_cols = st.columns(4)
