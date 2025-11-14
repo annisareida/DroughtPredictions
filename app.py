@@ -120,8 +120,8 @@ def load_data(file_path):
 # --- TAMBAHAN UNTUK 5 LOGO DI ATAS ---
 # Daftar file logo yang ingin ditampilkan
 sidebar_logos = [
-    "logos/logo1.png", "logos/logo2.png", "logos/logo6.png", 
-    "logos/logo7.png", "logos/logo8.png"
+    "logos/logo1.png", "logos/logo2.png", "logos/logo8.png", 
+    "logos/logo6.jpg", "logos/logo7.png"
 ]
 
 # Buat 5 kolom di sidebar
@@ -259,8 +259,8 @@ elif menu == "About":
 
     st.subheader("Didukung Oleh:")
     logo_files = [
-        "logos/logo1.png", "logos/logo2.png", "logos/logo3.png", "logos/logo4.png",
-        "logos/logo5.png", "logos/logo6.jpg", "logos/logo7.png", "logos/logo8.png"
+        "logos/logo1.png", "logos/logo2.png", "logos/logo8.png", "logos/logo3.png",
+        "logos/logo4.png", "logos/logo5.png", "logos/logo6.jpg", "logos/logo7.png"
     ]
 
     row1_cols = st.columns(4)
