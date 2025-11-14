@@ -148,6 +148,7 @@ st.sidebar.markdown("---")
 # --- AKHIR LOGO ---
 
 st.sidebar.title("📌 Navigasi")
+menu = st.sidebar.radio("Pilih Halaman:", ["Dashboard", "About"])
 
 # =================================================================================
 # HALAMAN DASHBOARD
