@@ -17,10 +17,7 @@ The model uses multivariate input features:
 ## 🔄 Project Workflow  
 1. **Data Collection**: Download historical climate data from NASA POWER (2010–2024).  
 2. **Data Preprocessing**: Cleaning, normalization, and SPI calculation.  
-3. **Modeling**:  
-   - Train a **Multivariate LSTM** model to predict rainfall.  
-   - Use a **VAR model** to generate future values of additional climate variables.  
-   - Feed VAR results as inputs to LSTM for rainfall prediction.  
+3. **Modeling**: Train a **Multivariate LSTM** model to predict rainfall.    
 4. **Forecasting**: Predict rainfall for the next 2 years (2025–2026).  
 5. **Drought Classification**: Apply the Standardized Precipitation Index (SPI) to categorize drought severity.  
 6. **Deployment**: Display the predictions in an interactive dashboard.  
@@ -30,8 +27,7 @@ The drought prediction dashboard can be accessed here:
 👉 [https://droughteye.streamlit.app/](https://droughteye.streamlit.app/)  
 
 ## 📈 Model Performance  
-- **MAE**: 0.114  
-- **RMSE**: 0.258  
+- **MAE**: 0.1698  
 
 ## 📖 About  
 This website was developed to present the research results of the **PKM-RE Team from Universitas Sriwijaya 2025**, titled:  
