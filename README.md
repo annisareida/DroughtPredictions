@@ -1,6 +1,6 @@
-# 🌾 Drought Predictions with VAR-LSTM  
+# 🌾 Drought Predictions with LSTM  
 
-This repository contains the implementation of a hybrid **VAR-LSTM model** for drought prediction in Ogan Ilir Regency, Indonesia. The project focuses on forecasting rainfall and classifying drought severity using the **Standardized Precipitation Index (SPI)**. The system aims to support rice farmers in preparing planting seasons through early and accurate drought predictions.  
+This repository contains the implementation of a **LSTM model** for drought prediction in Ogan Ilir Regency, Indonesia. The project focuses on forecasting rainfall and classifying drought severity using the **Standardized Precipitation Index (SPI)**. The system aims to support rice farmers in preparing planting seasons through early and accurate drought predictions.  
 
 ## 📊 Dataset  
 The dataset was obtained from [NASA POWER](https://power.larc.nasa.gov/) covering the period **2010–2024**.  
