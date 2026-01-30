@@ -30,10 +30,10 @@ The drought prediction dashboard can be accessed here:
 - **MAE**: 0.1698  
 
 ## 📖 About  
-This website was developed to present the research results of the **PKM-RE Team from Universitas Sriwijaya 2025**, titled:  
+This website was developed to present the research results of the [**PKM-RE Team from Universitas Sriwijaya 2025**](https://www.instagram.com/pkmre.droughteye?utm_source=ig_web_button_share_sheet&igsh=ZDNlZDc0MzIxNw==), titled:  
 *“Application of Long Short-Term Memory in Rainfall Prediction for Drought Classification Based on the Standardized Precipitation Index in Ogan Ilir Regency.”*  
 
-This research is supported by **PKM-RE 2025 funding from the Ministry of Education, Culture, Research, and Technology of the Republic of Indonesia (Kemendikbudristek RI).**  
+This research is supported by **PKM-RE 2025 funding from the Ministry of Education, Culture, Research, and Technology of the Republic of Indonesia (Kemendikbudristek RI).** and has been selected to advance to **Pekan Ilmiah Mahasiswa Nasional (PIMNAS) XXXVIII**.
 
 ---  
 
